@@ -1,5 +1,11 @@
 # ElectionTwitterbot
 
+# TODO:
+
+- [ ] Add a tldr
+- [ ] Read again everything to clean w/e necessary
+- [ ] open a Project's page on my website
+
 This repository outlines my setting up a twitter bot on a raspberry pi with a MySQL database to host the collected data.
 
 As this is still a work on progress, in the meantime here's credit to two individauls which their resources were the stepping stones for this:  
@@ -44,4 +50,4 @@ Register a root account with a new password, setup a database (`CREATE DATABASE 
 
 ### Wrapping it all together
 
-
+Once all files are in place just set up a shell script to run your `retweet_bot.R` file every 10 minutes, and have the script run by a crontab you setup. The retweet_bot file runs the `config.R` file, filters any spam and retweets the relevant tweets. It then appends the outputted and filtered tweets to `.csv` files. Unfortunately I should have done better tests as the files aren't saved properly (some columns pour over to other columns, etc). Instead I use the `bot-db.R` that queries the @bchirot user information everyday at 23:00 and saves that to the MySQL database. I can then access that from my local computer.
