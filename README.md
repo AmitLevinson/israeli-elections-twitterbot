@@ -1,6 +1,6 @@
 # ElectionTwitterbot
 
-A repo outlining setting up a twitter bot on a raspberry pi with a MariaDB to host the collected data.
+A repo outlining setting up a twitter bot on a raspberry pi with a MySQL database to host the collected data.
 
 As this is still a work on progress, in the meantime here's credit to two individauls which their resources were the stepping stones for this:  
 
