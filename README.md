@@ -6,7 +6,11 @@
 ### TL;DR
 I set up a Raspberry Pi using [Ran Bar-Zik's](https://internet-israel.com/category/%D7%9E%D7%93%D7%A8%D7%99%D7%9B%D7%99%D7%9D/raspberrypi/) tutorials (in Hebrew) and installed R and MySQL on it. I then implemented [Mike Mahoney's](https://www.mm218.dev/) [R code for setting up a Twitter bot](https://github.com/mikemahoney218/retweet_bot), removing some filters and making sure it works with Hebrew characters. Following that I set up a crontab to run a shell script every 10 minutes. The `.sh` script initiates the entire bot's workflow: Searching for tweets containing the hashtags, filtering them according to some defined parameters, retweeting the valid ones and saving them locally. A month into the project I also set up a script to upload the data to a MySQL database hosted on the Pi which I access from my personal computer.
 
-<p align="center"><img src="https://github.com/AmitLevinson/israeli-elections-twitterbot/blob/master/bot-img.png?raw=true" width=500 alt="a screenshot of the elections twitterbot"></p>
+<p align="center">
+<a href="https://twitter.com/bchirot2021/">
+<img src="https://github.com/AmitLevinson/israeli-elections-twitterbot/blob/master/bot-img.png?raw=true" width=500 alt="a screenshot of the elections twitterbot">
+</a>
+</p>
 
 ### Introduction
 
