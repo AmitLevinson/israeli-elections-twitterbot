@@ -1,7 +1,7 @@
 ## ElectionTwitterbot
 
 ### TL;DR
-I set up a Raspberry Pi using [Ran Bar-Zik's] tutorials and installed R and MySQL on it. I then adapted [Mike Mahoney's](https://www.mm218.dev/) [R code for setting up a Twitter bot](https://github.com/mikemahoney218/retweet_bot), removing some filters and making sure it works on Hebrew characters. Following that I set up a crontab to run a shell script every 10 minutes. The `.sh` scripts initiates the entire bot's workflow: Searching for tweets containing the hashtags, filtering them according to some defined parameters, retweeting the valid ones and saveing them locally. A month into the project I also set up a script to upload the data to a MySQL database hosted on the Pi which I access from my personal computer.
+I set up a Raspberry Pi using [Ran Bar-Zik's](https://internet-israel.com/category/%D7%9E%D7%93%D7%A8%D7%99%D7%9B%D7%99%D7%9D/raspberrypi/) tutorials (in Hebrew) and installed R and MySQL on it. I then adapted [Mike Mahoney's](https://www.mm218.dev/) [R code for setting up a Twitter bot](https://github.com/mikemahoney218/retweet_bot), removing some filters and making sure it works on Hebrew characters. Following that I set up a crontab to run a shell script every 10 minutes. The `.sh` scripts initiates the entire bot's workflow: Searching for tweets containing the hashtags, filtering them according to some defined parameters, retweeting the valid ones and saveing them locally. A month into the project I also set up a script to upload the data to a MySQL database hosted on the Pi which I access from my personal computer.
 
 ### Introduction
 
@@ -51,10 +51,10 @@ Register a root account with a new password, setup a database, a user - in order
 
 Once all files are in place just set up a shell script to run your `retweet_bot.R` file every 10 minutes, and have the script run by a crontab you set up. The `R/retweet_bot.R` file runs the `R/config.R` file, filters any spam and retweets the relevant tweets. It then appends the outputted and filtered tweets to separate `.csv` files (not shared here). Unfortunately I should have done better tests before starting as the files aren't saved properly, e.g. some columns spill over to other columns, etc. Instead I use the `R/bot-db.R` that queries the @bchirot user's tweet history everyday at 23:00. I also use the `R/df_names.rds` file to properly name the table's names for when I upload the collected data to the MySQL database. 
 
-Both shell scripts - That which run the Bot every 10 minutes and the one for upating the database at 23:00 - produce a 'log'. I have them save a text file (`.txt`) which recordes the last time it was run. Both of these are found in the `txt` folder, and on my Pi help me know when they last ran (since it shows the date of when it was last modified).
+Both shell scripts - That which runs the bot every 10 minutes and the one for updating the database at 23:00 - produce a 'log'. I have them save a text file (`.txt`) which records the last time it was run. Both of these are found in the `txt` folder, and on my Pi help me know when they last ran (since it shows the date of when it was last modified). You could use 
 
-The MySQL database isn't necessary, I just set it up so I can practice my SQL quering skills. Also, in retrospect if I saw this as a long term project with a lot more data I would normalize the database more. That is, now each table contains nearly 90 columns, and instaed we could split it up to several tables. Maybe next time around.
+The MySQL database wasn't necessary for this project, I just set it up so I can practice my SQL querying skills. Also, in retrospect if I saw this as a long term project with a lot more data I would normalize the database better. That is, now each table contains nearly 90 columns, and instead we could split it up to several tables, add any relevant keys, constaints, etc. Maybe next time around.
 
-Hopefully some of this was helpful, it sure was a great experience for me. 
+Hopefully some of this was helpful; it sure was a great experience for me. 
 
 **Feel free to reach out if you have any questions and I can be of any help!**

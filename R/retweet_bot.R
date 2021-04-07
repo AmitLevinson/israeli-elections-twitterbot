@@ -1,6 +1,12 @@
-# 99.9% of the code is attributed to @XXX that you can find here:
-# 
-# The rest of the 0.01 were some adaptations I did for Hebrew
+# Credit ------------------------------------------------------------------
+
+# 99.9% of the code is attributed to @MikeMahoney218 and can be found here:
+# https://github.com/mikemahoney218/retweet_bot
+# The rest of the 0.1 were some adaptations I did for Hebrew
+
+
+# Code --------------------------------------------------------------------
+
 
 # Load in filter rules and basic parameters.
 # A sample (blanked-out) config file is available in this repo.
@@ -30,13 +36,8 @@ avail_tweets$nhash <- lengths(regmatches(avail_tweets$text, gregexpr("#", avail_
 avail_tweets$nat <-  lengths(regmatches(avail_tweets$text, gregexpr("@", avail_tweets$text)))
 
 # drop anyone who's being spammy
-# since search_tweets only goes back a little more than a week, this serves as a
-# "temporary time-out" for any account posting too frequently
-#
-# note that permitted is defined in config.R and used to skip checks throughout
-#
-# for the ecology_tweets use-case, this basically is because I'm not about to
-# decide that the UN used too many hashtags or the WWF posts too much
+# Note that permitted is defined in config.R and used to skip checks throughout
+
 too_frequent <- names(table(avail_tweets$user_id)[table(avail_tweets$user_id) > spam_cutoff])
 too_frequent_index <- avail_tweets$user_id %in% too_frequent[!(too_frequent %in% permitted)]
 not_tweeting_that <- cbind(
@@ -53,8 +54,7 @@ avail_tweets <- avail_tweets[!(too_frequent_index), ]
 avail_tweets <- avail_tweets[avail_tweets$created_at > last_run, ]
 not_tweeting_that <- not_tweeting_that[not_tweeting_that$created_at > last_run, ]
 
-# drop the ban list defined in config.R
-# (for ecology_tweets, this is mostly oil companies & pseudoscience)
+# drop the ban list defined in config.R by Twitter IDs
 banned_index <- avail_tweets$user_id %in% banlist
 not_tweeting_that <- rbind(
   not_tweeting_that,
@@ -68,7 +68,6 @@ not_tweeting_that <- rbind(
 avail_tweets <- avail_tweets[!(banned_index), ]
 
 # drop accounts with fewer than a set number of followers (in config.R)
-# there's a lot of bot traffic on twitter. this cuts down on that.
 follower_index <- !(avail_tweets$followers_count > follower_cutoff) &
   !(avail_tweets$user_id %in% permitted)
 not_tweeting_that <- rbind(
@@ -83,41 +82,8 @@ not_tweeting_that <- rbind(
 )
 avail_tweets <- avail_tweets[!follower_index, ]
 
-# drop a list of banned tweet sources (defined in config.R)
-# this is the second most common way I filter out spam -- a lot of
-# "news aggregator" twitter accounts (which add noise without signal)
-# use the same 6-7 apps to post (which no real human uses)
-source_index <- avail_tweets$source %in% banned_sources &
-  !(avail_tweets$user_id %in% permitted)
-not_tweeting_that <- rbind(
-  not_tweeting_that,
-  cbind(
-    avail_tweets[source_index, ],
-    reason = rep(
-      "source_app",
-      sum(source_index)
-    )
-  )
-)
-avail_tweets <- avail_tweets[!source_index, ]
-
-# drop a very specific flavor of spam: "essay writing" services
-# no exceptions allowed
-essay_spam_index <- grepl("Pay us to do|Pay us to write|DM us for|Pay us for", avail_tweets$text, ignore.case = TRUE)
-not_tweeting_that <- rbind(
-  not_tweeting_that,
-  cbind(
-    avail_tweets[essay_spam_index, ],
-    reason = rep(
-      "essay_spam",
-      sum(essay_spam_index)
-    )
-  )
-)
-avail_tweets <- avail_tweets[!essay_spam_index, ]
 
 # drop people who use too many hashtags (as defined in config.R)
-# Note that the original code didn't work here, so I changed it a bit.
 hashtag_index <- (avail_tweets$nhash >= hashtag_cutoff) &
   !(avail_tweets$user_id %in% permitted)
 #&  !(avail_tweets$query == "#testinenglish -filter:replies")
@@ -134,9 +100,6 @@ not_tweeting_that <- rbind(
 avail_tweets <- avail_tweets[!(hashtag_index), ]
 
 # drop people who @ too many people
-# it is very, very rare for a tweet to exhibit this spam-signal and not
-# the hashtag spam signal
-# as ever, at_cutoff is in config.R
 at_index <- (avail_tweets$nat >= at_cutoff) &
   !(avail_tweets$user_id %in% permitted)
 
@@ -151,7 +114,6 @@ not_tweeting_that <- rbind(
   )
 )
 avail_tweets <- avail_tweets[!at_index, ]
-
 
 
 # prepping for logging -- we want to make sure we log a 0 for each rule
@@ -181,5 +143,7 @@ if (nrow(avail_tweets) > 0) {
 }
 
 # nice easy validation that the thing is working,
-# Though I (Amit) also added to print a text file in the directory
 print("Script complete")
+
+# I (Amit) also had the shell script produce a text file for easier logging in the 
+# bot's folder.
