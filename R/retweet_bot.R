@@ -2,7 +2,10 @@
 
 # 99.9% of the code is attributed to @MikeMahoney218 and can be found here:
 # https://github.com/mikemahoney218/retweet_bot
-# The rest of the 0.1 were some adaptations I did for Hebrew
+# The rest of the 0.1 were some adaptations I did for Hebrew characters
+# or removed filters I didn't use.
+
+# Make sure to credit him if you use any of this.
 
 
 # Code --------------------------------------------------------------------
